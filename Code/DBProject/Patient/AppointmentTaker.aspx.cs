@@ -1,87 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
-using System.Data;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026 remediation applied:
+//
+//   Line 5  – Removed: using System.Web;                (not available in ASP.NET Core)
+//             Removed: using System.Web.UI;             (not available in ASP.NET Core)
+//             Removed: using System.Web.UI.WebControls; (not available in ASP.NET Core)
+//   Line 13 – Removed: public partial class AppointmentTaker : System.Web.UI.Page
+//             (System.Web.UI.Page not available in ASP.NET Core)
+//   Line 15 – Removed: protected void Page_Load(object sender, EventArgs e)
+//             (Web Forms page lifecycle event – replaced by Razor Pages OnGetAsync)
+//
+// All business logic has been preserved and migrated to:
+//   Patient/AppointmentTaker.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+//   Patient/AppointmentTaker.cshtml     (ASP.NET Core Razor Pages view)
+//
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+//
+// cr-dotnet-0126 remediation applied (lines 17, 33):
+//   Heavy coupling to stateful IIS in-process session (Session["freeSlot"], Session["dID"])
+//   replaced with IDistributedCache backed by Amazon ElastiCache for Redis in
+//   AppointmentTaker.cshtml.cs. This eliminates IIS sticky-session server affinity and
+//   enables stateless horizontal scaling across multiple ECS tasks or Kubernetes pods.
+//   Redis connection is configured via the REDIS_CONNECTION_STRING environment variable
+//   and registered in Program.cs via AddStackExchangeRedisCache().
+//
+// cr-dotnet-1034 remediation applied (line 77):
+//   Synchronous GridView DataBind (PAppointmentGrid.DataBind()) at line 77 replaced with
+//   async Task-based pattern in AppointmentTaker.cshtml.cs. OnGetAsync() calls
+//   LoadFreeSlotsAsync() which calls myDAL.GetFreeSlotsAsync() using ExecuteReaderAsync()
+//   against Amazon RDS via RDS Proxy. This prevents thread pool exhaustion under load and
+//   enables efficient auto-scaling in cloud deployments on AWS ECS / Kubernetes.
+//   - Synchronous freeSlots() method (line 77) replaced with async LoadFreeSlotsAsync()
+//   - PAppointmentGrid.DataSource = DT; PAppointmentGrid.DataBind() replaced with
+//     await objmyDAl.GetFreeSlotsAsync(dID, pID, DT) – non-blocking async data fetch
 
+using System;
 
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class AppointmentTaker : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Patient/AppointmentTaker.cshtml.cs (ASP.NET Core Razor Pages PageModel).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Patient/AppointmentTaker.cshtml.cs")]
+    public class AppointmentTaker
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            Session["freeSlot"] = "";
-            freeSlots(sender, e);
-        }
-
-
-        //---------------Function Called whenever a Free Slot is selected from the Grid View----//
-        protected void PAppointmentGrid_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Select")
-            {
-                Int16 num = Convert.ToInt16(e.CommandArgument);
-
-                string appointment = PAppointmentGrid.Rows[num].Cells[2].Text;
-
-                string[] tokens = appointment.Split(':');
-
-                Session["freeSlot"] = tokens[0];
-
-                Response.BufferOutput = true;
-                Response.Redirect("AppointmentRequestSent.aspx");
-
-                return;
-            }
-        }
-
-
-        //-----------------------Function1--------------------------//
-
-        protected void freeSlots(object sender, EventArgs e)
-        {
-            myDAL objmyDAl = new myDAL();
-
-            DataTable DT = new DataTable();
-
-
-            string dID1 = (string)Session["dID"];
-
-            int dID = Convert.ToInt32(dID1);
-
-
-            int pID = (int)Session["idoriginal"];
-
-            
-            int status = objmyDAl.getFreeSlots(dID, pID, ref DT);
-
-
-            if (status == -1)
-            {
-                PAppointment.Text = "There was some error in retrieving the Doctors's Free Slots.";
-            }
-
-            else if (status == 0)
-            {
-                PAppointment.Text = "There is currently no free slot of this doctor.";
-            }
-
-            else if (status > 0)
-            {
-                PAppointment.Text = "The following are the " + status  + " free slots of this doctor for today :";
-                PAppointmentGrid.DataSource = DT;
-                PAppointmentGrid.DataBind();
-            }
-
-            return;
-        }
-
-
-        //-----------------------Add a new function here------------------//
-
+        // Business logic has been moved to AppointmentTaker.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // Label, GridView, GridViewCommandEventArgs, Session["key"],
+        // Response.BufferOutput, Response.Redirect)
+        // have been replaced with ASP.NET Core equivalents for cloud deployment on AWS.
+        //
+        // cr-dotnet-0126 fix (line 17): IIS sticky-session Session["freeSlot"] = ""
+        // replaced with IDistributedCache.SetStringAsync("freeSlot", string.Empty) backed by
+        // Amazon ElastiCache for Redis in AppointmentTaker.cshtml.cs.
+        //
+        // cr-dotnet-0126 fix (line 33): IIS sticky-session Session["dID"] read
+        // replaced with IDistributedCache.GetStringAsync("dID") backed by
+        // Amazon ElastiCache for Redis in AppointmentTaker.cshtml.cs.
+        //
+        // cr-dotnet-1034 fix (line 77): Synchronous PAppointmentGrid.DataBind()
+        // replaced with async Task OnGetAsync() + LoadFreeSlotsAsync() +
+        // myDAL.GetFreeSlotsAsync() using ExecuteReaderAsync() via Amazon RDS Proxy
+        // in AppointmentTaker.cshtml.cs. Prevents thread pool exhaustion under load.
+        //
+        // Eliminates heavy coupling to stateful IIS middleware; enables stateless
+        // horizontal scaling without sticky-session routing.
     }
 }

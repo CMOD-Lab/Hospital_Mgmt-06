@@ -1,92 +1,84 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+// Migrated from ASP.NET Web Forms (PatientNotifications.aspx / PatientNotifications.aspx.cs)
+// to ASP.NET Core Razor Pages to support cloud-native deployment on AWS.
+//
+// Rule cr-dotnet-0026 remediation applied:
+//   - Removed using System.Web;                   (line 5 in original – not available in ASP.NET Core)
+//   - Removed using System.Web.UI;                (line 6 in original – not available in ASP.NET Core)
+//   - Removed using System.Web.UI.WebControls;    (not available in ASP.NET Core)
+//   - Removed System.Web.UI.Page inheritance      (line 15 in original)
+//   - Removed Web Forms Page_Load event handler   (line 17 in original)
+//   - Replaced with ASP.NET Core Razor Pages PageModel pattern
+//   - Session access migrated from Session["key"] to HttpContext.Session.GetInt32
+//   - asp:Label Notify / NDoctor / NTimings replaced with model properties
+//     rendered in PatientNotifications.cshtml
+
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using DBProject.DAL;
-using System.Data;
 
-
-
-
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class PatientNotifications : System.Web.UI.Page
+    public class PatientNotificationsModel : PageModel
     {
-        protected void Page_Load(object sender, EventArgs e)
+        // Replaces asp:Label ID="Notify" runat="server" – rendered in PatientNotifications.cshtml
+        public string Notify { get; set; } = string.Empty;
+
+        // Replaces asp:Label ID="NDoctor" runat="server" – rendered in PatientNotifications.cshtml
+        public string NDoctor { get; set; } = string.Empty;
+
+        // Replaces asp:Label ID="NTimings" runat="server" – rendered in PatientNotifications.cshtml
+        public string NTimings { get; set; } = string.Empty;
+
+        public void OnGet()
         {
-            Notifications(sender, e);
+            // Preserves original Page_Load → Notifications() business logic
+            LoadNotifications();
         }
 
-
-
-        //-----------------------Function1--------------------------//
-        
-        protected void Notifications(object sender, EventArgs e)
+        private void LoadNotifications()
         {
             myDAL objmyDAl = new myDAL();
 
-            int pid = (int)Session["idoriginal"];
+            // Preserves original: int pid = (int)Session["idoriginal"];
+            int pid = (int)HttpContext.Session.GetInt32("idoriginal");
 
-            string dName = "";
-            string timings = "";
+            string dName = string.Empty;
+            string timings = string.Empty;
 
             int status = objmyDAl.getNotifications(pid, ref dName, ref timings);
 
             if (status == -1)
             {
-                Notify.Text = "There was some error in retrieving the Patient's notifications.";
+                // Replaces: Notify.Text = "There was some error..."
+                Notify = "There was some error in retrieving the Patient's notifications.";
             }
-
             else if (status == 0)
             {
-                Notify.Text = "There are no new notifications :)";
+                // Replaces: Notify.Text = "There are no new notifications :)"
+                Notify = "There are no new notifications :)";
             }
-
             else
             {
                 if (status == 1)
                 {
-                    NDoctor.Text = "Your requested appointment with Doctor " + dName + " has been accepted by him! :)";
-                    NTimings.Text = "The Appointment Timings are : " + timings;
+                    // Replaces: NDoctor.Text = "Your requested appointment..."
+                    NDoctor = "Your requested appointment with Doctor " + dName + " has been accepted by him! :)";
+                    // Replaces: NTimings.Text = "The Appointment Timings are : " + timings
+                    NTimings = "The Appointment Timings are : " + timings;
                     return;
                 }
-
                 else if (status == 2)
                 {
-                    NDoctor.Text = "Your requested appointment with Doctor " + dName + " has been rejected by him! :(";
-                    NTimings.Text = "The Appointment Timings were : " + timings;
+                    NDoctor = "Your requested appointment with Doctor " + dName + " has been rejected by him! :(";
+                    NTimings = "The Appointment Timings were : " + timings;
                     return;
                 }
-
                 else if (status == 3)
                 {
-                    NDoctor.Text = "Your appointment with Doctor " + dName + " has been completed now. We hope you are feeling better now!";
-                    NTimings.Text = "The Appointment Timings were : " + timings;
+                    NDoctor = "Your appointment with Doctor " + dName + " has been completed now. We hope you are feeling better now!";
+                    NTimings = "The Appointment Timings were : " + timings;
                     return;
                 }
-
-                return;
             }
         }
-
-    
-        //-----------------------Add a new function here------------------//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

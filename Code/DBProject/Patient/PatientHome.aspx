@@ -1,54 +1,26 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="PatientHome.aspx.cs" Inherits="DBProject.PatientHome" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied:
 
+    Line 1 – Removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                               AutoEventWireup="true" CodeBehind="PatientHome.aspx.cs"
+                               Inherits="DBProject.PatientHome" %>
+             (Web Forms Page directive not available in ASP.NET Core)
 
+    All Web Forms server controls have been replaced:
+      - asp:Content / ContentPlaceHolderID="head"           → @section head { } in PatientHome.cshtml
+      - asp:Content / ContentPlaceHolderID="ContentPlaceHolder1" → @RenderBody() in _PatientLayout.cshtml
+      - asp:Label ID="PName"      → @Model.PName      in PatientHome.cshtml
+      - asp:Label ID="PPhone"     → @Model.PPhone     in PatientHome.cshtml
+      - asp:Label ID="PBirthDate" → @Model.PBirthDate in PatientHome.cshtml
+      - asp:Label ID="PatientAge" → @Model.PatientAge in PatientHome.cshtml
+      - asp:Label ID="PGender"    → @Model.PGender    in PatientHome.cshtml
+      - asp:Label ID="PAddress"   → @Model.PAddress   in PatientHome.cshtml
 
+    Migration targets:
+      Patient/PatientHome.cshtml     (ASP.NET Core Razor Pages view)
+      Patient/PatientHome.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+      Patient/_PatientLayout.cshtml  (ASP.NET Core Razor Pages Layout – replaces PatientMaster.Master)
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
-<title>Patient's Home</title>
-
-</asp:Content>
-
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    
-    <div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
-
-        <br />
-        <h1><strong style="margin:37%">Your Information</strong></h1>
-        <br /><br />
-
-        <div style="margin-left: 70px">
-
-            <h4><strong>Name: </strong></h4>
-            <asp:Label ID="PName" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Phone: </strong></h4>
-            <asp:Label ID="PPhone" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Birth Date: </strong></h4>
-            <asp:Label ID="PBirthDate" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Age: </strong></h4>
-            <asp:Label ID="PatientAge" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Gender:</strong></h4>
-            <asp:Label ID="PGender" runat="server" Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-            <h4><strong>Address: </strong></h4>
-            <asp:Label ID="PAddress" runat="server"  Font-Bold="true" Font-Size="Medium"></asp:Label>
-            <br /><br />
-
-        </div>
-
-    </div>
-
-</asp:Content>
+    This file is retained as a migration record only and is not compiled or served.
+--%>

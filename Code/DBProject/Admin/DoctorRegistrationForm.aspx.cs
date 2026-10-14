@@ -1,88 +1,134 @@
-﻿using System;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using DBProject.DAL;
 
-namespace DB_Project
+namespace DBProject.Pages.Admin
 {
-	public partial class DoctorRegistrationForm : System.Web.UI.Page
-	{
-		protected void Page_Load(object sender, EventArgs e)
-		{
+    // Migrated from ASP.NET Web Forms (DoctorRegistrationForm.aspx.cs) to ASP.NET Core Razor Pages
+    // Replaced: System.Web.UI and System.Web.UI.WebControls -> Microsoft.AspNetCore.Mvc and Microsoft.AspNetCore.Mvc.RazorPages
+    // Replaced: System.Web.UI.Page base class -> PageModel (ASP.NET Core Razor Pages)
+    // Replaced: Page_Load event handler -> OnGet() method (Razor Pages lifecycle)
+    // Replaced: server-side ASP.NET Web Forms controls -> model-bound properties with data annotations
+    // Replaced: ServerValidateEventArgs -> server-side validation in OnPost() handler
+    public class DoctorRegistrationFormModel : PageModel
+    {
+        [BindProperty]
+        [Required(ErrorMessage = "* Required")]
+        public string Name { get; set; } = string.Empty;
 
-		}
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        [RegularExpression(@"((?:0[1-9])|(?:1[0-2]))\/((?:0[0-9])|(?:[1-2][0-9])|(?:3[0-1]))\/(\d{4})", ErrorMessage = "Birth Date Format Not Correct")]
+        public string BirthDate { get; set; } = string.Empty;
 
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        [EmailAddress(ErrorMessage = "Incorrect Email Format")]
+        public string Email { get; set; } = string.Empty;
 
+        [BindProperty]
+        [Required(ErrorMessage = "*Required")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
 
+        [BindProperty]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Passwords Do not Match")]
+        public string ConfirmPassword { get; set; } = string.Empty;
 
-		protected void ValidateDoctorEmail(object sender, ServerValidateEventArgs args)
-		{
-			myDAL objmyDAL = new myDAL();
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string Phone { get; set; } = string.Empty;
 
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string Salary { get; set; } = string.Empty;
 
-			if (objmyDAL.DoctorEmailAlreadyExist(Email.Text) == 1)
-			{
-				args.IsValid = false;
-				Msg.Visible = false;
-				Msg.Text = "";
-				DoctorValidate.ErrorMessage = "This Email Already exist , kindly choose a different one !";
-			}
-			else
-			{
-				args.IsValid = true;
-			}
+        [BindProperty]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Numbers Only !")]
+        public string ChargesPerVisit { get; set; } = string.Empty;
 
-		}
+        [BindProperty]
+        [Range(0, 5, ErrorMessage = "Experience Range should be (0-5)")]
+        public int Exp { get; set; }
 
+        [BindProperty]
+        public int Department { get; set; }
 
-		protected void DoctorRegister(object sender, EventArgs e)
-		{
+        [BindProperty]
+        public string Qualification { get; set; } = string.Empty;
 
-			if (Page.IsValid)
-			{
-				myDAL objmyDAL = new myDAL();
+        [BindProperty]
+        public string Specialization { get; set; } = string.Empty;
 
-				int exp = Convert.ToInt32(Exp.Text);
-				int salary = Convert.ToInt32(Salary.Text);
-				int chargesPerVisit = Convert.ToInt32(Charges_per_visit.Text);
-				int dept = Convert.ToInt32(Department.SelectedValue);
-				string gender = Request.Form["Gender"].ToString();
+        [BindProperty]
+        public string Address { get; set; } = string.Empty;
 
-				objmyDAL.AddDoctor(Name.Text, Email.Text, Password.Text, BirthDate.Text, dept, Phone.Text, gender[0], Address.Text, exp, salary, chargesPerVisit, spec.Text, Qualification.Text);
-				Response.BufferOutput = true;
-				Msg.Visible = true;
-				Msg.Text = "doctor Added Succesfully";
-				flushInformation();
+        public string Message { get; set; } = string.Empty;
+        public bool IsMessageVisible { get; set; } = false;
+        public string EmailError { get; set; } = string.Empty;
+        public string DepartmentError { get; set; } = string.Empty;
 
+        public void OnGet()
+        {
+            // Initial page load - no action required
+        }
 
-			}
-		}
+        public IActionResult OnPost()
+        {
+            // Validate email uniqueness (replaces ValidateDoctorEmail ServerValidate)
+            myDAL objmyDAL = new myDAL();
+            if (objmyDAL.DoctorEmailAlreadyExist(Email) == 1)
+            {
+                EmailError = "This Email Already exist , kindly choose a different one !";
+                ModelState.AddModelError("Email", EmailError);
+            }
 
-		protected void flushInformation()
-		{
-			Name.Text = "";
-			Email.Text = "";
-			Password.Text = "";
-			BirthDate.Text = "";
-			Department.Text = "Select Depatment";
-			Phone.Text = "";
-			Address.Text = "";
-			Exp.Text = "";
-			Salary.Text = "";
-			Charges_per_visit.Text = "";
-			spec.Text = "";
-			Qualification.Text = "";
-		}
+            // Validate department selection (replaces DepartmentValidate ServerValidate)
+            if (Department == 0)
+            {
+                DepartmentError = "Please Select Department";
+                ModelState.AddModelError("Department", DepartmentError);
+            }
 
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
-		protected void DepartmentValidate(object sender, ServerValidateEventArgs args)
-		{
-			int dept = Convert.ToInt32(Department.SelectedValue);
-			if (dept == 0)
-			{
-				DV.ErrorMessage = "Please Select Department";
-				args.IsValid = false;
-			}
-		}
-	}
+            string gender = Request.Form["Gender"].ToString();
+
+            int exp = Exp;
+            int salary = Convert.ToInt32(Salary);
+            int chargesPerVisit = Convert.ToInt32(ChargesPerVisit);
+
+            objmyDAL.AddDoctor(Name, Email, Password, BirthDate, Department, Phone,
+                gender.Length > 0 ? gender[0] : 'M', Address, exp, salary, chargesPerVisit,
+                Specialization, Qualification);
+
+            IsMessageVisible = true;
+            Message = "doctor Added Succesfully";
+            FlushInformation();
+
+            return Page();
+        }
+
+        private void FlushInformation()
+        {
+            Name = string.Empty;
+            Email = string.Empty;
+            Password = string.Empty;
+            BirthDate = string.Empty;
+            Department = 0;
+            Phone = string.Empty;
+            Address = string.Empty;
+            Exp = 0;
+            Salary = string.Empty;
+            ChargesPerVisit = string.Empty;
+            Specialization = string.Empty;
+            Qualification = string.Empty;
+        }
+    }
 }

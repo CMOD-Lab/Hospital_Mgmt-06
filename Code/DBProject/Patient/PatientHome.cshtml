@@ -1,0 +1,68 @@
+@* Migrated from ASP.NET Web Forms (PatientHome.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original PatientHome.aspx)
+   - Removed asp:Content, asp:Label Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - asp:Label PName / PPhone / PBirthDate / PatientAge / PGender / PAddress replaced with
+     model property bindings rendered via @Model.PropertyName *@
+@page
+@model DBProject.Patient.PatientHomeModel
+@{
+    ViewData["Title"] = "Patient's Home";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Patient's Home</title>
+}
+
+<div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px">
+
+    <br />
+    <h1><strong style="margin:37%">Your Information</strong></h1>
+    <br /><br />
+
+    @* Display error message if patient info retrieval failed
+       (replaces Response.Write("<script>alert(...)") from original code-behind) *@
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" style="margin-left: 70px">@Model.ErrorMessage</div>
+    }
+
+    <div style="margin-left: 70px">
+
+        @* Replaces asp:Label ID="PName" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Name: </strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PName</p>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PPhone" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Phone: </strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PPhone</p>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PBirthDate" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Birth Date: </strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PBirthDate</p>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PatientAge" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Age: </strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PatientAge</p>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PGender" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Gender:</strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PGender</p>
+        <br /><br />
+
+        @* Replaces asp:Label ID="PAddress" runat="server" Font-Bold="true" Font-Size="Medium" *@
+        <h4><strong>Address: </strong></h4>
+        <p style="font-weight:bold; font-size:medium;">@Model.PAddress</p>
+        <br /><br />
+
+    </div>
+
+</div>

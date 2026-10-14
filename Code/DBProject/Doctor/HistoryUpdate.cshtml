@@ -1,0 +1,48 @@
+@* Migrated from ASP.NET Web Forms (HistoryUpdate.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original HistoryUpdate.aspx)
+   - Removed asp:Content, asp:TextBox, asp:Button Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _DoctorLayout.cshtml layout
+   - Form submission handled via Razor Pages OnPost handlers instead of Web Forms event model *@
+@page
+@model doctor.HistoryUpdateModel
+@{
+    ViewData["Title"] = "Update History";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Update History</title>
+}
+
+<h1>Update history</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form method="post">
+    <h4>Disease:</h4>
+    <input type="text" name="Disease" id="Disease" value="@Model.Disease" class="form-control" style="width:300px;" />
+
+    <h4>Progress:</h4>
+    <input type="text" name="Progress" id="Progress" value="@Model.Progress" class="form-control" style="width:300px;" />
+
+    <h4>Prescription</h4>
+    <input type="text" name="Prescription" id="Prescription" value="@Model.Prescription" class="form-control" style="width:300px;" />
+
+    <br />
+    <br />
+    <br />
+
+    <button type="submit" asp-page-handler="SaveInDatabase" style="font-weight:bold" class="btn btn-primary">Accept &amp; Save</button>
+    &nbsp;&nbsp;
+    <button type="submit" asp-page-handler="GenerateBill" style="font-weight:bold" class="btn btn-secondary">Generate Bill</button>
+</form>

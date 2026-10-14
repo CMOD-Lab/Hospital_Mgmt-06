@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DBProject</RootNamespace>
     <AssemblyName>DBProject</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -78,6 +78,10 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web.DynamicData" />
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net452\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -93,6 +97,22 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- cr-dotnet-0045: Amazon ElastiCache for Redis distributed session packages -->
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- cr-dotnet-0045: Redis session infrastructure helper and ASP.NET Core entry point -->
+    <Compile Include="Infrastructure\RedisSessionExtensions.cs" />
+    <Compile Include="Program.cs" />
+    <!-- cr-dotnet-1041: Custom HttpModule for Content-Security-Policy header injection -->
+    <Compile Include="Security\CspHttpModule.cs" />
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\AddStaff.aspx" />

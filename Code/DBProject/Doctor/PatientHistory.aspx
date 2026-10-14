@@ -1,53 +1,19 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="PatientHistory.aspx.cs" Inherits="doctor.patienthistory" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied (line 1):
+      - Removed <%@ Page %> directive referencing System.Web.UI.Page and MasterPageFile
+      - Web Forms asp:Content, asp:GridView server controls removed
+      - Replaced by Doctor/PatientHistory.cshtml (ASP.NET Core Razor Pages)
+      - Layout provided by Doctor/_DoctorLayout.cshtml
 
+    Rule cr-dotnet-1034 remediation applied (lines 23 and 41):
+      Line 23: asp:GridView ID="patientsgrid" – synchronous DataBind() replaced with
+               async Task-based pattern in PatientHistory.cshtml.cs (OnGetAsync).
+               myDAL.SearchPatientAsync() uses ExecuteReaderAsync() via Amazon RDS Proxy,
+               preventing thread pool exhaustion under load and enabling auto-scaling.
+      Line 41: patientsgrid.DataBind() call in Page_Load replaced by async data population
+               via await objmydal.SearchPatientAsync(did, dt) in OnGetAsync().
 
-
-
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title>Patient History</title>
-</asp:Content>
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
-
-    
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-     <h1><strong style="margin:25%">Today's Appointments</strong></h1>
-    <br /><br />
-    <div style="margin-left:150px">
-
-    <asp:GridView ID="patientsgrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False"
-        AutoGenerateSelectButton="True" 
-        OnRowCommand="patientsgrid_RowCommand" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
-     
-        
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-    </asp:GridView>
-
-        </div>
-
-    
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-</asp:Content>
-
-
+    Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+    See PatientHistory.cshtml and PatientHistory.cshtml.cs for the migrated implementation.
+--%>

@@ -1,59 +1,38 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="TreatmentHistory.aspx.cs" Inherits="DBProject.TreatmentHistory" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied:
 
+    Line 1 – Removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                               AutoEventWireup="true" CodeBehind="TreatmentHistory.aspx.cs"
+                               Inherits="DBProject.TreatmentHistory" %>
+             (Web Forms Page directive not available in ASP.NET Core)
 
+    All Web Forms server controls have been replaced:
+      - <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+                                                   → @page / @model directives in TreatmentHistory.cshtml
+      - asp:Content ID="Content1" (head section)   → @section head { } in TreatmentHistory.cshtml
+      - asp:Content ID="Content2" (body section)   → @RenderBody() content in TreatmentHistory.cshtml
+      - asp:Label ID="THistory"                    → @Model.THistory rendered in TreatmentHistory.cshtml
+      - asp:GridView ID="THistoryGrid"             → HTML table rendered from DataTable in TreatmentHistory.cshtml
 
+    Rule cr-dotnet-1034 remediation applied (line 29):
+      asp:GridView ID="THistoryGrid" with synchronous DataSource/DataBind pattern replaced with
+      async Task-based data access in TreatmentHistory.cshtml.cs:
+      - OnGet() converted to OnGetAsync() returning Task
+      - LoadTreatmentHistory() converted to LoadTreatmentHistoryAsync() returning Task
+      - Synchronous myDAL.getTreatmentHistory() replaced with async myDAL.GetTreatmentHistoryAsync()
+        which uses SqlConnection.OpenAsync() and SqlCommand.ExecuteReaderAsync()
+        connected to Amazon RDS via RDS Proxy, preventing thread pool exhaustion
+        under load and enabling efficient auto-scaling in cloud deployments.
 
+    Rule cr-dotnet-1034 remediation applied (line 55):
+      asp:GridView ID="THistoryGrid" DataSource/DataBind (THistoryGrid.DataSource = DT; THistoryGrid.DataBind())
+      replaced with async DataTable population via myDAL.GetTreatmentHistoryAsync() in
+      TreatmentHistory.cshtml.cs, rendered as HTML table in TreatmentHistory.cshtml.
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Migration target:
+      Patient/TreatmentHistory.cshtml       (ASP.NET Core Razor Pages view)
+      Patient/TreatmentHistory.cshtml.cs    (ASP.NET Core Razor Pages PageModel)
 
-        <title>Treatment History</title>
-
-</asp:Content>
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-    
-    <h1><strong style="margin:35%">Your Treatment History</strong></h1>
-    <br /><br />
-
-
-
-    <asp:Label ID="THistory" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="THistoryGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-
-
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-            <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-          
-    </asp:GridView>
-
-    <br /><br />
-
-</asp:Content>
+    This file is retained as a migration record only and is not compiled or served.
+--%>

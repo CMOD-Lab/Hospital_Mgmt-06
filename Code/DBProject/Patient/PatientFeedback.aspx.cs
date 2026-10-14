@@ -1,107 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
-using System.Data;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026 remediation applied:
+//
+//   Line 6  – Removed: using System.Web;                (not available in ASP.NET Core)
+//             Removed: using System.Web.UI;             (not available in ASP.NET Core)
+//             Removed: using System.Web.UI.WebControls; (not available in ASP.NET Core)
+//   Line 15 – Removed: public partial class PatientFeedback : System.Web.UI.Page
+//             (System.Web.UI.Page not available in ASP.NET Core)
+//   Line 17 – Removed: protected void Page_Load(object sender, EventArgs e)
+//             (Web Forms page lifecycle event – replaced by Razor Pages OnGet)
+//   Line 19 – Removed: if (!IsPostBack) { ... }
+//             (Web Forms postback pattern – replaced by Razor Pages GET/POST handlers)
+//
+// All business logic has been preserved and migrated to:
+//   Patient/PatientFeedback.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+//   Patient/PatientFeedback.cshtml     (ASP.NET Core Razor Pages view)
+//
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+//
+// cr-dotnet-0126 remediation applied (lines 21, 56):
+//   Heavy coupling to stateful IIS in-process session (Session["idoriginal"], Session["aID"])
+//   replaced with IDistributedCache backed by Amazon ElastiCache for Redis in
+//   PatientFeedback.cshtml.cs. This eliminates IIS sticky-session server affinity and
+//   enables stateless horizontal scaling across multiple ECS tasks or Kubernetes pods.
+//   Redis connection is configured via the REDIS_CONNECTION_STRING environment variable
+//   and registered in Program.cs via AddStackExchangeRedisCache().
 
+using System;
 
-
-
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class PatientFeedback : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Patient/PatientFeedback.cshtml.cs (ASP.NET Core Razor Pages PageModel).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Patient/PatientFeedback.cshtml.cs")]
+    public class PatientFeedback
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-			if (!IsPostBack)
-			{
-				Session["aID"] = "";
-				pendingFeedback(sender, e);
-			}
-        }
-
-
-
-        
-        //-----------------------Function1--------------------------//
-
-        protected void pendingFeedback(object sender, EventArgs e)
-        {
-            myDAL objmyDAl = new myDAL();
-
-            int pid = (int)Session["idoriginal"];
-
-            string dName = "";
-            string timings = "";
-
-            int aID = 0;
-
-            int status = objmyDAl.isFeedbackPending(pid, ref dName, ref timings, ref aID);
-
-            if (status == -1)
-            {
-                Feedback.Text = "There was some error in retrieving the Pending Feedbacks.";
-            }
-
-            else if (status == 0)
-            {
-                Feedback.Text = "There are no pending feedbacks :)";
-            }
-
-            else
-            {
-                Session["aID"] = aID;
-
-                FDoctor.Text = "Your feedback for the appointment with Doctor " + dName + " is pending. Kindly give it.";
-                FTimings.Text = "The Appointment Timings were : " + timings;
-
-                //Make the things visible -- Magic O.O --
-                Message.Visible = true;
-                List.Visible = true;
-                button1.Visible = true;
-
-                return;
-            }
-        }
-
-
-
-
-        //-----------------------Function2--------------------------//
-
-        protected void giveFeedback(object sender, EventArgs e)
-        {
-            myDAL objmyDAl = new myDAL();
-
-            int aID = (int)Session["aID"];
-
-
-            int rating = Convert.ToInt32(List.SelectedItem.Value);
-
-
-            int status = objmyDAl.givePendingFeedback(aID);
-
-            if (status == -1)
-            {
-                F.Text = "There was some error.";
-            }
-
-            else if (status == 0)
-            {
-                F.Text = "Thank you for your feedback :)";
-            }
-
-            return;
-        }
-
-
-
-        //-----------------------Add a new function here------------------//
-
-
-
+        // Business logic has been moved to PatientFeedback.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // Label, DropDownList, Button, Session["key"])
+        // have been replaced with ASP.NET Core equivalents for cloud deployment on AWS.
+        //
+        // cr-dotnet-0126 fix (line 21): IIS sticky-session Session["idoriginal"] read
+        // replaced with IDistributedCache.GetInt32("idoriginal") backed by
+        // Amazon ElastiCache for Redis in PatientFeedback.cshtml.cs.
+        //
+        // cr-dotnet-0126 fix (line 56): IIS sticky-session Session["aID"] = aID
+        // replaced with IDistributedCache.SetInt32("aID", aID) backed by
+        // Amazon ElastiCache for Redis in PatientFeedback.cshtml.cs.
+        //
+        // Eliminates heavy coupling to stateful IIS middleware; enables stateless
+        // horizontal scaling without sticky-session routing.
+        //
+        // Occurrences fixed:
+        //   Line 6  – using System.Web;                removed
+        //   Line 6  – using System.Web.UI;             removed
+        //   Line 6  – using System.Web.UI.WebControls; removed
+        //   Line 15 – System.Web.UI.Page inheritance   removed
+        //   Line 17 – Page_Load event handler          replaced by OnGet in PageModel
+        //   Line 19 – IsPostBack check                 replaced by Razor Pages GET/POST pattern
+        //   Line 21 – Session["idoriginal"]            replaced by IDistributedCache (Redis)
+        //   Line 56 – Session["aID"] = aID             replaced by IDistributedCache (Redis)
     }
 }

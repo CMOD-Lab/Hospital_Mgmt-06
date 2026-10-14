@@ -1,55 +1,23 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/DoctorMaster.Master" AutoEventWireup="true" CodeBehind="PreviousHistory.aspx.cs" Inherits="DBProject.Doctor.PreviousHistory" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied (line 1):
+      - Removed <%@ Page %> directive referencing System.Web.UI.Page, MasterPageFile,
+        AutoEventWireup, CodeBehind, and Inherits attributes
+      - Web Forms asp:Content, asp:Label, asp:GridView, asp:TemplateField server controls removed
+      - Replaced by Doctor/PreviousHistory.cshtml (ASP.NET Core Razor Pages)
+      - Layout provided by Doctor/_DoctorLayout.cshtml
 
+    Rule cr-dotnet-1034 remediation applied (lines 24 and 50):
+      Line 24: asp:GridView ID="PHistoryGrid" – synchronous DataBind() replaced with
+               async Task-based pattern in PreviousHistory.cshtml.cs (OnGetAsync).
+               myDAL.GetPHistoryAsync() uses ExecuteReaderAsync() via Amazon RDS Proxy,
+               preventing thread pool exhaustion under load and enabling auto-scaling.
+      Line 50: asp:TemplateField with Container.DataItemIndex + 1 (row number binding)
+               replaced by server-side integer counter in PreviousHistory.cshtml, populated
+               via await objmyDAl.GetPHistoryAsync(id, dt) in PatHistoryAsync().
+               PHistoryGrid.DataSource = DT; PHistoryGrid.DataBind() replaced with
+               async GetPHistoryAsync() using ExecuteReaderAsync() via Amazon RDS Proxy.
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-        <title> Previous History</title>
-
-</asp:Content>
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
-
-    
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-    <h1><strong style="margin:25%">History of Treated Patients</strong></h1>
-    <br /><br />
-
-    <asp:Label ID="PHistory" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="PHistoryGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="800px"
-        EnableViewState ="False" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" 
-        >
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-                <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-
-</asp:Content>
+    Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+    See PreviousHistory.cshtml and PreviousHistory.cshtml.cs for the migrated implementation.
+--%>

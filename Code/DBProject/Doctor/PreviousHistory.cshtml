@@ -1,0 +1,68 @@
+@* Migrated from ASP.NET Web Forms (PreviousHistory.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original PreviousHistory.aspx)
+   - Removed asp:Content, asp:Label, asp:GridView, asp:TemplateField Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _DoctorLayout.cshtml layout
+   - GridView replaced with an HTML table rendered from the DataTable model property
+   - asp:Label error message replaced with TempData["Error"] model-bound message *@
+@page
+@model DBProject.Doctor.PreviousHistoryModel
+@{
+    ViewData["Title"] = "Previous History";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Previous History</title>
+}
+
+<!----------------Styling---------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:25%">History of Treated Patients</strong></h1>
+<br /><br />
+
+@if (TempData["Error"] != null)
+{
+    @* Replaces asp:Label ID="PHistory" error message *@
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.PatientHistory != null && Model.PatientHistory.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="width:800px; color:Black; border:1px solid #DEDFDE; border-style:None; border-width:1px;">
+        <thead style="background-color:#6B696B; color:White; font-weight:bold;">
+            <tr>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.PatientHistory.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowNumber = 1; }
+            @foreach (System.Data.DataRow row in Model.PatientHistory.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px;">@rowNumber</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+}
+else if (TempData["Error"] == null)
+{
+    <p>No patient history records found.</p>
+}
+
+<br /><br />

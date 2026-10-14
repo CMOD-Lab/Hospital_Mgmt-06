@@ -1,0 +1,70 @@
+@* Migrated from ASP.NET Web Forms (PatientHistory.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original PatientHistory.aspx)
+   - Removed asp:Content, asp:GridView Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _DoctorLayout.cshtml layout
+   - GridView replaced with an HTML table rendered from the DataTable model property
+   - Row selection / navigation handled via anchor links instead of GridView RowCommand *@
+@page
+@model doctor.PatientHistoryModel
+@{
+    ViewData["Title"] = "Patient History";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
+
+@section head {
+    <title>Patient History</title>
+}
+
+<!----------------Styling---------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:25%">Today's Appointments</strong></h1>
+<br /><br />
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div style="margin-left:150px">
+    @if (Model.Appointments != null && Model.Appointments.Rows.Count > 0)
+    {
+        <table class="GridView-d" cellpadding="4" style="width:1000px; color:Black; border:1px solid #DEDFDE;">
+            <thead style="background-color:#6B696B; color:White; font-weight:bold;">
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Appointments.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow row in Model.Appointments.Rows)
+                {
+                    <tr style="background-color:#F7F7DE;">
+                        @foreach (var cell in row.ItemArray)
+                        {
+                            <td>@cell</td>
+                        }
+                        <td>
+                            @* Replaces GridView AutoGenerateSelectButton / RowCommand:
+                               appointment ID is in column index 1 (same as original Cells[1].Text) *@
+                            <a href="/Doctor/HistoryUpdate?appointid=@row[1]"
+                               class="btn btn-sm btn-primary">Select</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No appointments found for today.</p>
+    }
+</div>
+
+<br /><br /><br /><br /><br />

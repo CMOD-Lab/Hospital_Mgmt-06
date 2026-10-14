@@ -1,24 +1,11 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Doctor/doctormaster.Master" AutoEventWireup="true" CodeBehind="HistoryUpdate.aspx.cs" Inherits="doctor.Historyupdate" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied (line 1):
+      - Removed <%@ Page %> directive referencing System.Web.UI.Page and MasterPageFile
+      - Web Forms asp:Content, asp:TextBox, asp:Button server controls removed
+      - Replaced by Doctor/HistoryUpdate.cshtml (ASP.NET Core Razor Pages)
+      - Layout provided by Doctor/_DoctorLayout.cshtml
 
-
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-
-<title>Update History</title>
-
-</asp:Content>
-
-<asp:Content ID="Content2" ContentPlaceHolderID="Cp1" runat="server">
-
-<h1>Update history  </h1>
-
-<h4>Disease:</h4><asp:TextBox ID="Disease" runat="server"></asp:TextBox>
-   <h4>Progress:</h4> <asp:TextBox ID="progress" runat="server"></asp:TextBox>
-    <h4>Prescription</h4><asp:TextBox ID="Prescription" runat="server"></asp:TextBox>
-    <br />
-      <br />
-      <br />
-
-    <asp:Button ID="submit" runat="server" Text="Accept & Save" Onclick="saveindatabase" Font-Bold="true" />  
-    <asp:Button ID="Bill" runat="server" Text="Generate Bill" OnClick="generate_bill" Font-Bold ="true" />
-
-</asp:Content>
+    Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+    See HistoryUpdate.cshtml and HistoryUpdate.cshtml.cs for the migrated implementation.
+--%>

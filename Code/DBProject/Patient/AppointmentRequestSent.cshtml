@@ -1,0 +1,41 @@
+@* Migrated from ASP.NET Web Forms (AppointmentRequestSent.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original AppointmentRequestSent.aspx)
+   - Removed asp:Content, asp:Button, asp:Label Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - asp:Button OnClick="sendARequest" replaced with form POST to OnPostSendRequest handler
+   - asp:Label ID="Message" replaced with TempData["Error"] / TempData["Success"] messages *@
+@page
+@model DBProject.Patient.AppointmentRequestSentModel
+@{
+    ViewData["Title"] = "Send Appointment Request";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Send Appointment Request</title>
+}
+
+<br /><br /><br /><br />
+<h3><strong>Click on this button to send an appointment request to the Doctor</strong></h3>
+
+@* Replaces asp:Button runat="server" OnClick="sendARequest" Text="Send Request" Font-Bold="true" *@
+<form method="post" asp-page-handler="SendRequest">
+    <button type="submit" style="font-weight:bold;">Send Request</button>
+</form>
+
+<br /><br />
+
+@* Replaces asp:Label ID="Message" runat="server" *@
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<br /><br />

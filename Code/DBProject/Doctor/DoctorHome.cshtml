@@ -1,0 +1,55 @@
+@page
+@model doctor.DoctorHomeModel
+@{
+    ViewData["Title"] = "Doctor's Home";
+    Layout = "~/Doctor/_DoctorLayout.cshtml";
+}
+
+<div style="background-image:url(/assets/img/backgrounds/PatientHome.jpg); background-position:center; background-size:20px; margin-left:50px">
+
+    <h1>Your Profile</h1>
+    <br />
+    <h3>Name: <span style="font-weight:bold; font-size:medium">@Model.Name</span><br /><br /></h3>
+    <h4>Phone: <span style="font-weight:bold; font-size:medium">@Model.Phone</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Address: <span style="font-weight:bold; font-size:medium">@Model.Address</span>
+    </h4>
+    <br />
+    <h4>BirthDate: <span style="font-weight:bold; font-size:medium">@Model.BirthDate</span></h4>
+    <br /><br />
+    <h4>Gender: <span style="font-weight:bold; font-size:medium">@Model.Gender</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Department No: <span style="font-weight:bold; font-size:medium">@Model.DepartmentNo</span>
+    </h4>
+    <br /><br />
+    <h4>Charges Per Visit: <span style="font-weight:bold; font-size:medium">@Model.ChargesPerVisit</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Monthly Salary: <span style="font-weight:bold; font-size:medium">@Model.MonthlySalary</span>
+    </h4>
+    <br /><br />
+    <h4>Repute Index: <span style="font-weight:bold; font-size:medium">@Model.ReputeIndex</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Patients Treated: <span style="font-weight:bold; font-size:medium">@Model.PatientsTreated</span>
+    </h4>
+    <br /><br />
+    <h4>Qualification: <span style="font-weight:bold; font-size:medium">@Model.Qualification</span>
+        <br /><br />
+        Specialization: <span style="font-weight:bold; font-size:medium">@Model.Specialization</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </h4>
+    <h4>Work Experience: <span style="font-weight:bold; font-size:medium">@Model.WorkExperience</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Status: <span style="font-weight:bold; font-size:medium">@Model.Status</span>
+    </h4>
+    <br />
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+</div>

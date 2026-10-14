@@ -1,0 +1,93 @@
+@* Migrated from ASP.NET Web Forms (PatientFeedback.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original PatientFeedback.aspx)
+   - Removed asp:Content, asp:Label, asp:DropDownList, asp:ListItem, asp:Button Web Forms
+     server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - asp:Label Feedback / FDoctor / FTimings / Message / F replaced with model property bindings
+   - asp:DropDownList ID="List" replaced with HTML <select> element bound to model
+   - asp:Button ID="button1" OnClick="giveFeedback" replaced with form POST to OnPostGiveFeedback
+   - Visible="false" toggling replaced with conditional @if rendering *@
+@page
+@model DBProject.Patient.PatientFeedbackModel
+@{
+    ViewData["Title"] = "Feedback";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Feedback</title>
+}
+
+<h1><strong style="margin:37%">Feedback</strong></h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    @* Replaces asp:Label ID="Feedback" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.FeedbackMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FeedbackMessage</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="FDoctor" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.FDoctorMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FDoctorMessage</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="FTimings" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.FTimingsMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.FTimingsMessage</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="Message" Visible="false" – shown only when feedback is pending *@
+    @if (Model.ShowFeedbackForm)
+    {
+        <br /><br />
+        <p style="font-weight:bold; font-size:medium;">
+            Dear Patient, How was your treatment experience with our specialized Doctor on a rating of 1 - 5:
+        </p>
+
+        <div style="margin-left: 790px">
+
+            @* Replaces asp:DropDownList ID="List" Visible="false" with asp:ListItem 1-5 *@
+            <form method="post" asp-page-handler="GiveFeedback">
+                <select name="Rating" style="font-weight:bold;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <br /><br />
+
+                @* Replaces asp:Button ID="button1" Visible="false" OnClick="giveFeedback"
+                   Text="Give Feedback" Font-Bold="true" *@
+                <button type="submit" style="font-weight:bold;">Give Feedback</button>
+            </form>
+
+            <br /><br />
+
+            @* Replaces asp:Label ID="F" runat="server" Font-Bold="true" Font-Size="Medium" *@
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+            @if (TempData["Success"] != null)
+            {
+                <p style="font-weight:bold; font-size:medium;">@TempData["Success"]</p>
+            }
+
+        </div>
+    }
+
+    <br /><br />
+</div>

@@ -1,0 +1,79 @@
+@* Migrated from ASP.NET Web Forms (AppointmentTaker.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original AppointmentTaker.aspx)
+   - Removed asp:Content, asp:Label, asp:GridView, asp:TemplateField Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - GridView replaced with an HTML table rendered from the DataTable model property
+   - asp:Label PAppointment error/info message replaced with TempData model-bound messages
+   - GridView AutoGenerateSelectButton / OnRowCommand replaced with Select link to OnGetSelect handler *@
+@page
+@model DBProject.Patient.AppointmentTakerModel
+@{
+    ViewData["Title"] = "Appointment Taker";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Appointment Taker</title>
+}
+
+<!----------------Styling---------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:37%">Free Time Slots</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="PAppointment" runat="server" *@
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Info"] != null)
+{
+    <p>@TempData["Info"]</p>
+}
+
+<br /><br />
+
+@* Replaces asp:GridView ID="PAppointmentGrid" with AutoGenerateSelectButton and OnRowCommand *@
+@if (Model.FreeSlots != null && Model.FreeSlots.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="width:800px; color:Black; border:1px solid #DEDFDE; border-style:None; border-width:1px;">
+        <thead style="background-color:#6B696B; color:White; font-weight:bold;">
+            <tr>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.FreeSlots.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowNumber = 1; }
+            @foreach (System.Data.DataRow row in Model.FreeSlots.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px;">@rowNumber</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                    <td>
+                        @* Replaces GridView AutoGenerateSelectButton / OnRowCommand="PAppointmentGrid_RowCommand":
+                           appointment value (Cells[2].Text equivalent) passed as query-string parameter *@
+                        <a href="?handler=Select&appointment=@Uri.EscapeDataString(row.ItemArray.Length > 2 ? row.ItemArray[2]?.ToString() ?? string.Empty : string.Empty)"
+                           class="btn btn-sm btn-primary">Select</a>
+                    </td>
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

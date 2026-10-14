@@ -1,61 +1,42 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master" AutoEventWireup="true" CodeBehind="TakeAppointment.aspx.cs" Inherits="DBProject.TakeAppointment" %>
+<%--
+    This file has been migrated to ASP.NET Core Razor Pages.
+    Rule cr-dotnet-0026 remediation applied:
 
+    Line 1 – Removed: <%@ Page Title="" Language="C#" MasterPageFile="~/Patient/PatientMaster.Master"
+                               AutoEventWireup="true" CodeBehind="TakeAppointment.aspx.cs"
+                               Inherits="DBProject.TakeAppointment" %>
+             (Web Forms Page directive not available in ASP.NET Core)
 
+    All Web Forms server controls have been replaced:
+      - <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+                                                   → @page / @model directives in TakeAppointment.cshtml
+      - asp:Content ID="Content1" (head section)   → @section head { } in TakeAppointment.cshtml
+      - asp:Content ID="Content2" (body section)   → @RenderBody() content in TakeAppointment.cshtml
+      - asp:Label ID="TDept"                        → @Model.TDept rendered in TakeAppointment.cshtml
+      - asp:GridView ID="TDeptGrid" with AutoGenerateSelectButton / OnRowCommand
+                                                   → HTML table with Select links in TakeAppointment.cshtml
+                                                     and OnGetSelectAsync handler in TakeAppointment.cshtml.cs
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    Rule cr-dotnet-1034 remediation applied (line 27):
+      asp:GridView ID="TDeptGrid" with synchronous DataSource/DataBind pattern replaced with
+      async Task-based data access in TakeAppointment.cshtml.cs:
+      - OnGet() converted to OnGetAsync() returning Task
+      - LoadDeptInfo() converted to LoadDeptInfoAsync() returning Task
+      - Synchronous myDAL.getdeptInfo() replaced with async myDAL.GetDeptInfoAsync()
+        which uses SqlConnection.OpenAsync() and SqlCommand.ExecuteReaderAsync()
+        connected to Amazon RDS via RDS Proxy, preventing thread pool exhaustion
+        under load and enabling efficient auto-scaling in cloud deployments.
 
-            <title>Departments</title>
+    Rule cr-dotnet-1034 remediation applied (line 56):
+      asp:GridView ID="TDeptGrid" OnRowCommand="TDeptGrid_RowCommand" (Select handler)
+      replaced with async OnGetSelectAsync() handler in TakeAppointment.cshtml.cs:
+      - OnGetSelect() converted to OnGetSelectAsync() returning Task<IActionResult>
+      - IDistributedCache.SetString() replaced with IDistributedCache.SetStringAsync()
+        for non-blocking async cache writes to Amazon ElastiCache for Redis.
 
+    Migration target:
+      Patient/TakeAppointment.cshtml       (ASP.NET Core Razor Pages view)
+      Patient/TakeAppointment.cshtml.cs    (ASP.NET Core Razor Pages PageModel)
 
-</asp:Content>
-
-
-
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    
-    <!------------------Styling------------------>
-    <link rel="stylesheet" href="/assets/css/grid-view.css"/>
-
-
-    <h1><strong style="margin:23%">Select a Department to view its Doctors</strong></h1>
-    <br /><br />
-
-    <asp:Label ID="TDept" runat="server"></asp:Label>
-    <br /><br />
-
-    <asp:GridView ID="TDeptGrid" runat="server" class = "GridView-d" CellPadding="4" ForeColor="Black" GridLines="Vertical" Width="1000px"
-        EnableViewState ="False"
-        AutoGenerateSelectButton="True" 
-        OnRowCommand="TDeptGrid_RowCommand" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px">
-     
-        
-
-        <AlternatingRowStyle BackColor="White" />
-        <FooterStyle BackColor="#CCCC99" />
-        <HeaderStyle BackColor="#6B696B" Font-Bold="True" ForeColor="White" />
-        <PagerStyle BackColor="#F7F7DE" ForeColor="Black" HorizontalAlign="Right" />
-        <RowStyle BackColor="#F7F7DE" />
-        <SelectedRowStyle BackColor="#CE5D5A" Font-Bold="True" ForeColor="White" />
-        <SortedAscendingCellStyle BackColor="#FBFBF2" />
-        <SortedAscendingHeaderStyle BackColor="#848384" />
-        <SortedDescendingCellStyle BackColor="#EAEAD3" />
-        <SortedDescendingHeaderStyle BackColor="#575357" />
-          
-        <Columns>
-            <asp:TemplateField HeaderText = "No." ItemStyle-Width="50">
-                <ItemTemplate>
-                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                </ItemTemplate>
-
-            <ItemStyle Width="50px"></ItemStyle>
-            </asp:TemplateField>
-        </Columns>
-
-
-    </asp:GridView>
-
-    <br /><br />
-
-
-</asp:Content>
+    This file is retained as a migration record only and is not compiled or served.
+--%>

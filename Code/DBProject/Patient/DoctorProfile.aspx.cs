@@ -1,88 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
-using System.Data;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026 remediation applied:
+//
+//   Line 5  – Removed: using System.Web;                (not available in ASP.NET Core)
+//   Line 6  – Removed: using System.Web.UI;             (not available in ASP.NET Core)
+//             Removed: using System.Web.UI.WebControls; (not available in ASP.NET Core)
+//   Line 14 – Removed: public partial class DoctorProfile : System.Web.UI.Page
+//             (System.Web.UI.Page not available in ASP.NET Core)
+//   Line 16 – Removed: protected void Page_Load(object sender, EventArgs e)
+//             (Web Forms page lifecycle event – replaced by Razor Pages OnGet)
+//
+// All business logic has been preserved and migrated to:
+//   Patient/DoctorProfile.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+//   Patient/DoctorProfile.cshtml     (ASP.NET Core Razor Pages view)
+//
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
 
+using System;
 
-
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class DoctorProfile : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Patient/DoctorProfile.cshtml.cs (ASP.NET Core Razor Pages PageModel).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Patient/DoctorProfile.cshtml.cs")]
+    public class DoctorProfile
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            doctorInfo(sender, e);
-        }
-
-
-
-        //-----------------------Function1--------------------------//
-
-        protected void doctorInfo(object sender, EventArgs e)
-        {
-            myDAL objmyDAl = new myDAL();
-
-            string dID1 = (string) Session["dID"];
-
-            int dID = Convert.ToInt32(dID1);
-
-            string name = "";
-            string phone = "";
-            string gender = "";
-
-            float charges_Per_Visit = 0;
-            float ReputeIndex = 0;
-            int PatientsTreated = 0;
-            string qualification = "";
-            string specialization = "";
-            int workE = 0;
-            int age = 0;
-
-            string deptName = (string)Session["deptOriginal"];
-
-            int status = objmyDAl.doctorInfoDisplayer(dID, ref name, ref phone, ref gender, ref charges_Per_Visit, ref ReputeIndex, ref PatientsTreated, ref qualification, ref specialization, ref workE, ref age);
-
-            if (status == -1)
-            {
-                Response.Write("<script>alert('There was some error in retrieving the Doctor's Info.');</script>");
-            }
-
-            else if (status == 0)
-            {
-                DName.Text = name;
-                DPhone.Text = phone;
-                DQualification.Text = qualification;
-                DSpecialization.Text = specialization;
-                DWork.Text = workE.ToString();
-                DAge.Text = age.ToString();
-                DGender.Text = gender;
-                DDept.Text = deptName;
-                DCharges.Text = charges_Per_Visit.ToString();
-                DRI.Text = ReputeIndex.ToString(); 
-                DPT.Text = PatientsTreated.ToString();
-            }
-
-            return;
-        }
-
-
-        //-----------------------Function2------------------//
-
-        protected void RedirectToAppointmentTaker(object sender, EventArgs e)
-        {
-            Response.BufferOutput = true;
-            Response.Redirect("AppointmentTaker.aspx");
-        }
-        
-
-
-
-        //-----------------------Add a new function here------------------//
-
-
+        // Business logic has been moved to DoctorProfile.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // Label, Button, Session["key"], Response.Redirect)
+        // have been replaced with ASP.NET Core equivalents for cloud deployment on AWS.
     }
 }

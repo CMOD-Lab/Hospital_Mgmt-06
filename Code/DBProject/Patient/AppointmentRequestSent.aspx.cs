@@ -1,62 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
-using System.Data;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026 remediation applied:
+//
+//   Line 5  – Removed: using System.Web;                (not available in ASP.NET Core)
+//   Line 6  – Removed: using System.Web.UI;             (not available in ASP.NET Core)
+//             Removed: using System.Web.UI.WebControls; (not available in ASP.NET Core)
+//   Line 14 – Removed: public partial class AppointmentNotificationSent : System.Web.UI.Page
+//             (System.Web.UI.Page not available in ASP.NET Core)
+//   Line 16 – Removed: protected void Page_Load(object sender, EventArgs e)
+//             (Web Forms page lifecycle event – replaced by Razor Pages OnGet)
+//
+// All business logic has been preserved and migrated to:
+//   Patient/AppointmentRequestSent.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+//   Patient/AppointmentRequestSent.cshtml     (ASP.NET Core Razor Pages view)
+//
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
 
+using System;
 
-
-namespace DBProject
+namespace DBProject.Patient
 {
-    public partial class AppointmentNotificationSent : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Patient/AppointmentRequestSent.cshtml.cs (ASP.NET Core Razor Pages PageModel).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Patient/AppointmentRequestSent.cshtml.cs")]
+    public class AppointmentNotificationSent
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-        //-----------------------Function1--------------------------//
-        protected void sendARequest (object sender, EventArgs e)
-        {
-            myDAL objmyDAl = new myDAL();
-
-            
-            string dID1 = (string)Session["dID"];
-
-            int dID = Convert.ToInt32(dID1);
-
-
-            int pID = (int)Session["idoriginal"];
-
-
-            string temp = (string)Session["freeSlot"];
-
-            int freeSlot = Convert.ToInt32(temp);
-
-            string mes = "";
-
-            int status = objmyDAl.insertAppointment(dID, pID, freeSlot, ref mes);
-
-
-            if (status == -1)
-            {
-                Message.Text = "There was some error in sending appointment request to the Doctor.";
-            }
-
-            else
-            {
-                Message.Text = mes;
-            }
-            
-            return;
-        }
-
-
-
+        // Business logic has been moved to AppointmentRequestSent.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // Label, Button, Session["key"], Response.Redirect)
+        // have been replaced with ASP.NET Core equivalents for cloud deployment on AWS.
     }
-    
 }

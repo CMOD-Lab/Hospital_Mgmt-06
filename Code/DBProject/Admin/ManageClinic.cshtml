@@ -1,0 +1,93 @@
+@page
+@model DBProject.Admin.ManageClinicModel
+@{
+    ViewData["Title"] = "Manage Clinic";
+    Layout = "~/Admin/_AdminLayout.cshtml";
+}
+
+<style type="text/css">
+    .outer {
+        margin-left: 20%;
+        display: inline-block;
+    }
+    .mydiv {
+        display: inline-block;
+    }
+</style>
+
+<div class="outer">
+    <div>
+        <h4 style="font-weight:bold">Select Category:</h4>
+        <br />
+        <form method="post">
+            <input type="radio" name="Category" value="DOCTOR" id="Doctor"
+                   @(Model.Category == "DOCTOR" ? "checked" : "")
+                   onchange="this.form.submit()" /> <label for="Doctor">Doctor</label>
+
+            <input type="radio" name="Category" value="PATIENT" id="Patient"
+                   @(Model.Category == "PATIENT" ? "checked" : "")
+                   onchange="this.form.submit()" /> <label for="Patient">Patient</label>
+
+            <input type="radio" name="Category" value="OTHERSTAFF" id="OtherStaff"
+                   @(Model.Category == "OTHERSTAFF" ? "checked" : "")
+                   onchange="this.form.submit()" /> <label for="OtherStaff">Other Staff</label>
+
+            <br /><br />
+
+            <input type="text" name="SearchQuery" value="@Model.SearchQuery" id="txtSearch" />
+            <button type="submit" asp-page-handler="Search" class="btn btn-primary">Search</button>
+            <br />
+
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <span style="font-weight:bold">@Model.Message</span>
+            }
+
+            @if (Model.GridData != null && Model.GridData.Rows.Count > 0)
+            {
+                <table border="2" cellpadding="8" cellspacing="3" style="width:380px; text-align:center; border-color:#336666; background-color:white;">
+                    <caption style="font-weight:bold; text-align:top">@Model.GridCaption</caption>
+                    <thead style="background-color:#336666; color:white; font-weight:bold;">
+                        <tr>
+                            @foreach (System.Data.DataColumn col in Model.GridData.Columns)
+                            {
+                                <th>@col.ColumnName</th>
+                            }
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.GridData.Rows)
+                        {
+                            <tr>
+                                @foreach (var item in row.ItemArray)
+                                {
+                                    <td>@item</td>
+                                }
+                                <td>
+                                    <button type="submit" asp-page-handler="Delete"
+                                            asp-route-id="@row[0]"
+                                            asp-route-category="@Model.Category"
+                                            class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="submit" asp-page-handler="Select"
+                                            asp-route-id="@row[0]"
+                                            asp-route-category="@Model.Category"
+                                            class="btn btn-info btn-sm">Select</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <input type="hidden" name="Category" value="@Model.Category" />
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.DetailHtml))
+{
+    <div style="display:inline-block; float:right; margin-right:10%">
+        @Html.Raw(Model.DetailHtml)
+    </div>
+}

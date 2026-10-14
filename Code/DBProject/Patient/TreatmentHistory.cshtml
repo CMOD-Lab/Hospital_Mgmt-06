@@ -1,0 +1,66 @@
+@* Migrated from ASP.NET Web Forms (TreatmentHistory.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original TreatmentHistory.aspx)
+   - Removed asp:Content, asp:Label, asp:GridView, asp:TemplateField Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - GridView replaced with an HTML table rendered from the DataTable model property
+   - asp:Label THistory error/info message replaced with model-bound message *@
+@page
+@model DBProject.Patient.TreatmentHistoryModel
+@{
+    ViewData["Title"] = "Treatment History";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Treatment History</title>
+}
+
+<!----------------Styling---------------->
+<link rel="stylesheet" href="/assets/css/grid-view.css" />
+
+<h1><strong style="margin:35%">Your Treatment History</strong></h1>
+<br /><br />
+
+@* Replaces asp:Label ID="THistory" runat="server" *@
+@if (!string.IsNullOrEmpty(Model.THistory))
+{
+    <p>@Model.THistory</p>
+}
+<br /><br />
+
+@* Replaces asp:GridView ID="THistoryGrid" *@
+@if (Model.TreatmentHistoryData != null && Model.TreatmentHistoryData.Rows.Count > 0)
+{
+    <table class="GridView-d" cellpadding="4" style="width:1000px; color:Black; border:1px solid #DEDFDE; border-style:None; border-width:1px;">
+        <thead style="background-color:#6B696B; color:White; font-weight:bold;">
+            <tr>
+                @* Replaces asp:TemplateField HeaderText="No." *@
+                <th style="width:50px;">No.</th>
+                @foreach (System.Data.DataColumn col in Model.TreatmentHistoryData.Columns)
+                {
+                    <th>@col.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowNumber = 1; }
+            @foreach (System.Data.DataRow row in Model.TreatmentHistoryData.Rows)
+            {
+                <tr style="background-color:#F7F7DE;">
+                    @* Replaces asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' *@
+                    <td style="width:50px;">@rowNumber</td>
+                    @foreach (var cell in row.ItemArray)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+}
+
+<br /><br />

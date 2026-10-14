@@ -1,0 +1,46 @@
+@* Migrated from ASP.NET Web Forms (CurrentAppointment.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original CurrentAppointment.aspx)
+   - Removed asp:Content, asp:Label Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - asp:Label Appointment / ADoctor / ATimings replaced with model property bindings *@
+@page
+@model DBProject.Patient.CurrentAppointmentModel
+@{
+    ViewData["Title"] = "Current Appointment";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Current Appointment</title>
+}
+
+<h1><strong style="margin:30%">Current Appointments</strong></h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    @* Replaces asp:Label ID="Appointment" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.AppointmentMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.AppointmentMessage</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="ADoctor" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.DoctorMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.DoctorMessage</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="ATimings" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.TimingsMessage))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.TimingsMessage</p>
+    }
+    <br /><br />
+
+</div>

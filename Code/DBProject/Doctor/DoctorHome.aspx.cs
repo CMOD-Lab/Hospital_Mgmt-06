@@ -1,50 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// The Web Forms code-behind (System.Web.UI.Page) has been replaced by
+// DoctorHome.cshtml and DoctorHome.cshtml.cs which use
+// Microsoft.AspNetCore.Mvc.RazorPages.PageModel.
+//
+// Original Web Forms using statements removed:
+//   using System.Web;                   (not available in ASP.NET Core)
+//   using System.Web.UI;                (not available in ASP.NET Core)
+//   using System.Web.UI.WebControls;    (not available in ASP.NET Core)
+//
+// All business logic has been preserved in DoctorHome.cshtml.cs.
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
+//
+// cr-dotnet-0045 remediation applied (line 21):
+//   In-process HttpSessionState (Session["idoriginal"]) replaced with IDistributedCache
+//   backed by Amazon ElastiCache for Redis in DoctorHome.cshtml.cs.
+//   This eliminates server affinity and enables stateless horizontal scaling across
+//   multiple ECS tasks or Kubernetes pods.
+//   Redis connection is configured via the REDIS_CONNECTION_STRING environment variable
+//   and registered in Program.cs via AddStackExchangeRedisCache().
+
+using System;
 using System.Data;
-
-
+using DBProject.DAL;
 
 namespace doctor
 {
-    public partial class doctorhome : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Doctor/DoctorHome.cshtml.cs (ASP.NET Core Razor Page model).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Doctor/DoctorHome.cshtml.cs")]
+    public class doctorhome
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            myDAL objmyDAL = new myDAL();
-            DataTable dt = new DataTable();
-            int found;
-            int did = (int)Session["idoriginal"];
-         
-            found = objmyDAL.docinfo_DAL(did, ref dt);
-
-
-			if (found!=1)
-            {
-                { Response.Write("<script>alert('There was some error');</script>"); }
-            }
-            else
-            {
-                Label1.Text = dt.Rows[0][1].ToString();
-                Label2.Text = dt.Rows[0][2].ToString();
-                Label3.Text = dt.Rows[0][3].ToString();
-                Label4.Text = dt.Rows[0][4].ToString();
-                Label5.Text = dt.Rows[0][5].ToString();
-                Label6.Text = dt.Rows[0][6].ToString();
-                Label7.Text = dt.Rows[0][7].ToString();
-                Label8.Text = dt.Rows[0][8].ToString();
-                Label9.Text = dt.Rows[0][9].ToString();
-                Label10.Text = dt.Rows[0][10].ToString();
-                Label11.Text = dt.Rows[0][11].ToString();
-                Label12.Text = dt.Rows[0][12].ToString();
-                Label13.Text = dt.Rows[0][13].ToString();
-                Label14.Text = dt.Rows[0][14].ToString();
-
-            }
-        }
+        // Business logic has been moved to DoctorHomeModel in DoctorHome.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // System.Web.UI.MasterPage) have been removed as they are not compatible
+        // with ASP.NET Core cloud deployments on AWS.
+        //
+        // Session state (cr-dotnet-0045): HttpSessionState replaced with
+        // IDistributedCache (Amazon ElastiCache for Redis) in DoctorHome.cshtml.cs.
     }
 }

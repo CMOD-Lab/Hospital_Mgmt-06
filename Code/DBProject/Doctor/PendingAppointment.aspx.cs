@@ -1,86 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DBProject.DAL;
-using System.Data;
+// This file has been migrated to ASP.NET Core Razor Pages.
+// Rule cr-dotnet-0026 remediation applied:
+//
+//   Line 5  – Removed: using System.Web;                (not available in ASP.NET Core)
+//   Line 6  – Removed: using System.Web.UI;             (not available in ASP.NET Core)
+//             Removed: using System.Web.UI.WebControls; (not available in ASP.NET Core)
+//   Line 13 – Removed: public partial class pendingappointment : System.Web.UI.Page
+//             (System.Web.UI.Page not available in ASP.NET Core)
+//   Line 15 – Removed: protected void Page_Load(object sender, EventArgs e)
+//             (Web Forms page lifecycle event – replaced by Razor Pages OnGetAsync)
+//
+// Rule cr-dotnet-1034 remediation applied (line 32):
+//   Line 32: pendingappointments.DataSource = DT; pendingappointments.DataBind();
+//            Synchronous GridView DataBind in loadgrid() replaced with async Task-based pattern.
+//            In PendingAppointment.cshtml.cs, OnGetAsync() calls LoadGridAsync() which calls
+//            myDAL.GetAllPendingAppointmentsAsync() using ExecuteReaderAsync() against Amazon
+//            RDS via RDS Proxy. This prevents thread pool exhaustion under load and enables
+//            efficient auto-scaling in cloud deployments on AWS ECS / Kubernetes.
+//            update_appointment and Delete_appointment handlers converted to async POST handlers.
+//
+// All business logic has been preserved and migrated to:
+//   Doctor/PendingAppointment.cshtml.cs  (ASP.NET Core Razor Pages PageModel)
+//   Doctor/PendingAppointment.cshtml     (ASP.NET Core Razor Pages view)
+//
+// Migration target: ASP.NET Core Razor Pages for cloud-native AWS deployment.
 
+using System;
 
 namespace doctor
 {
-    public partial class pendingappointment : System.Web.UI.Page
+    // Retained as a compatibility stub. All active logic is in
+    // Doctor/PendingAppointment.cshtml.cs (ASP.NET Core Razor Pages PageModel).
+    [Obsolete("Migrated to ASP.NET Core Razor Pages. See Doctor/PendingAppointment.cshtml.cs")]
+    public class pendingappointment
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-                loadgrid();   
-        }
-
-
-        public void loadgrid()
-        {
-                myDAL objDAL = new myDAL();
-                
-               int did = (int)Session["idoriginal"];
-
-                    DataTable DT = new DataTable();
-
-                objDAL.GetAllpendingappointments_DAL(did, ref DT);
-
-                pendingappointments.DataSource = DT;
-                pendingappointments.DataBind();
-               
-        }
-
-
-        
-
-        
-
-        protected void update_appointment(Object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
-        {
-
-            if (e.CommandName == "Select")
-            {
-                // Retrieve the row that raised the event from the Rows
-
-                Int16 num = Convert.ToInt16(e.CommandArgument);
-
-                string aId = pendingappointments.Rows[num].Cells[1].Text;
-
-                //retrieve appointmentid  from that row (key-non editable)
-                int appointmentid = Convert.ToInt32(aId);
-
-                //=====updating the newly entered values in database====
-                myDAL objmyDAL = new myDAL();
-                int result = objmyDAL.UpdateAppointment_DAL(appointmentid);
-                //reload the page======================================================
-                pendingappointments.EditIndex = -1;
-                loadgrid();
-            }
-        }
-
-
-        protected void Delete_appointment(Object sender, GridViewDeleteEventArgs e)
-        {
-            // Retrieve the row that raised the event from the Rows
-            // collection of the GridView control.
-            GridViewRow row = pendingappointments.Rows[e.RowIndex];
-
-            //get appointmentid from that row
-            int appointmentid = Convert.ToInt32(row.Cells[1].Text.ToString());
-
-
-            //Call the DAL function to delete the student with this roll number 
-            myDAL objDAL = new myDAL();
-
-            if (objDAL.Deleteappointment_DAL(appointmentid) == 1)
-            {  
-                loadgrid(); //reload the grid to show the modifications in table
-            }
-        }
-
-
+        // Business logic has been moved to PendingAppointment.cshtml.cs.
+        // Web Forms dependencies (System.Web.UI.Page, System.Web.UI.WebControls,
+        // GridView, GridViewCommandEventArgs, GridViewDeleteEventArgs,
+        // Session["key"], Response.Write, Response.Redirect)
+        // have been replaced with ASP.NET Core equivalents for cloud deployment on AWS.
+        //
+        // cr-dotnet-1034 fix (line 32): Synchronous pendingappointments.DataBind() replaced
+        // with async Task OnGetAsync() + LoadGridAsync() + myDAL.GetAllPendingAppointmentsAsync()
+        // in PendingAppointment.cshtml.cs. Uses ExecuteReaderAsync() via Amazon RDS Proxy
+        // to prevent thread pool exhaustion under load.
     }
 }

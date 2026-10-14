@@ -1,0 +1,47 @@
+@* Migrated from ASP.NET Web Forms (PatientNotifications.aspx) to ASP.NET Core Razor Pages
+   to support cloud-native deployment on AWS.
+   Rule cr-dotnet-0026 remediation applied:
+   - Removed <%@ Page %> directive with MasterPageFile, AutoEventWireup, CodeBehind, Inherits
+     (line 1 in original PatientNotifications.aspx)
+   - Removed asp:Content, asp:Label Web Forms server controls
+   - Replaced with ASP.NET Core Razor Pages syntax using _PatientLayout.cshtml layout
+   - asp:Label Notify / NDoctor / NTimings replaced with model property bindings
+     rendered via @Model.PropertyName *@
+@page
+@model DBProject.Patient.PatientNotificationsModel
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Patient/_PatientLayout.cshtml";
+}
+
+@section head {
+    <title>Notifications</title>
+}
+
+<h1><strong style="margin:37%">Notifications</strong></h1>
+<br /><br />
+
+<div style="margin-left: 70px">
+
+    @* Replaces asp:Label ID="Notify" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.Notify))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.Notify</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="NDoctor" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.NDoctor))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.NDoctor</p>
+    }
+    <br /><br />
+
+    @* Replaces asp:Label ID="NTimings" runat="server" Font-Bold="true" Font-Size="Medium" *@
+    @if (!string.IsNullOrEmpty(Model.NTimings))
+    {
+        <p style="font-weight:bold; font-size:medium;">@Model.NTimings</p>
+    }
+    <br /><br />
+
+</div>
